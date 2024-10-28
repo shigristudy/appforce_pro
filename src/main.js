@@ -2,11 +2,10 @@ import "./assets/main.css";
 
 import { createApp } from "vue";
 import App from "./App.vue";
-import router from "./router";
 import "../src/assets/main.css";
 
-const app = createApp(App);
+import "https://js.stripe.com/v3/";
 
-app.use(router);
+const app = createApp(App);
 
 app.mount("#app");

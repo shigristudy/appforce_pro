@@ -1,7 +1,7 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import Stripe from './components/Stripe.vue'
 </script>
 
 <template>
-  <RouterView />
+  <Stripe />
 </template>
