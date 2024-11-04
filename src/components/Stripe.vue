@@ -25,8 +25,8 @@ const elements = ref(null)
 onMounted(() => {
   setupStripe()
 })
-const BASE_URL = "http://control-panel.test/api/app";
-const STRIPE_PUBLISHABLE_KEY = "pk_test_51NSd7OIEpzgpRspxl8geRr48D6D4r0Ol9I7ay8dstoxCHRT4z4TvT2xPGpeVX5L4ODa27YYVnG5DwktvAVf6V5zJ00pWgHxpeW";
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
 const INITIATE_PAYMENT_API = `${BASE_URL}/payment/initiate`;
 const PAYMENT_SUCCESS_API = `${BASE_URL}/payment/complete`;
 const PAYMENT_FAILURE_API = `${BASE_URL}/payment/failure`;
