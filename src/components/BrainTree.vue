@@ -18,16 +18,20 @@ import dropin from "braintree-web-drop-in";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000/api/app";
-const INITIATE_PAYMENT_API = `${BASE_URL}/payment/braintree/initiate`;
-const PROCESS_PAYMENT_API = `${BASE_URL}/payment/braintree/process_payment`;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+console.log(BASE_URL);
+
+const INITIATE_PAYMENT_API = `${BASE_URL}/braintree/initiate`;
+const PROCESS_PAYMENT_API = `${BASE_URL}/braintree/process_payment`;
+const PAYMENT_SUCCESS_API = `${BASE_URL}/braintree/complete`;
+const PAYMENT_FAILURE_API = `${BASE_URL}/braintree/failure`;
+const PAYMENT_INTENT_ID = ref(null);
 
 const dropinInstance = ref(null);
 const message = ref(null);
 
 onMounted(async () => {
     const { data } = await axios.post(INITIATE_PAYMENT_API);
-    console.log(data.clientToken);
     initializeBraintreeDropin(data.clientToken);
 });
 
@@ -58,14 +62,23 @@ const handlePayment = () => {
       }
 
       axios
-        .post(PROCESS_PAYMENT_API, { nonce: payload.nonce })
+        .post(PROCESS_PAYMENT_API, { 
+          nonce: payload.nonce,
+          // client_token: 
+        })
         .then((response) => {
           message.value = "Payment Successful!";
-          console.log("Payment successful:", response.data);
+          PAYMENT_INTENT_ID.value= response.data
+          axios.post(PAYMENT_SUCCESS_API, {
+            payment_intent_id: PAYMENT_INTENT_ID.value
+          })
         })
         .catch((error) => {
           message.value = "Payment failed. Please try again.";
           console.error("Payment error:", error);
+          axios.post(PAYMENT_FAILURE_API, {
+            payment_intent_id: PAYMENT_INTENT_ID.value
+          })
         });
     });
   }
