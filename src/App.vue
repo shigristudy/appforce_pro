@@ -6,15 +6,20 @@ import axios from "axios";
 import IconStripe from "./components/icons/Stripe.vue";
 import IconBraintree from "./components/icons/Braintree.vue";
 const method = ref("");
+const enableGateways = ref("");
 const selectedPlan = ref(null);
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const PLANS_API = `${BASE_URL}/plans`;
+const ENABLE_GATEWAYS_API = `${BASE_URL}/enable-gateways`;
+
 const plans = ref([]);
 
 onMounted(async () => {
   const { data } = await axios.get(PLANS_API);
   plans.value = data;
+  const ENABLE_GATEWAYS = await axios.get(ENABLE_GATEWAYS_API);
+  enableGateways.value= ENABLE_GATEWAYS.data
 });
 
 const selectPlan = (plan) => {
@@ -64,14 +69,14 @@ const selectPlan = (plan) => {
         </p>
       </div>
       <div class="flex justify-center items-center space-x-5 mb-4">
-        <button
+        <button v-if="enableGateways.stripe"
           class="flex items-center w-full justify-center px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
           @click="method = 'stripe'"
         >
         <IconStripe />
         Stripe
         </button>
-        <button
+        <button v-if="enableGateways.brainTree"
           class="flex items-center w-full justify-center px-4 py-2 border rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
           @click="method = 'braintree'"
         >

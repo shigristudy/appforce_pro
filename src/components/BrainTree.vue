@@ -46,7 +46,7 @@ const INITIATE_PAYMENT_API = `${BASE_URL}/braintree/initiate`;
 const PROCESS_PAYMENT_API = `${BASE_URL}/braintree/process_payment`;
 const PAYMENT_SUCCESS_API = `${BASE_URL}/braintree/complete`;
 const PAYMENT_FAILURE_API = `${BASE_URL}/braintree/failure`;
-const PAYMENT_INTENT_ID = ref(null);
+const PAYMENT_ID = ref(null);
 
 const dropinInstance = ref(null);
 const message = ref(null);
@@ -67,7 +67,7 @@ const setupBraintree = async () => {
   if (!props.plan) return;
 
   const { data } = await axios.post(INITIATE_PAYMENT_API, {
-    amount: props.plan.price,
+    device_id: 2,
     currency: props.plan.currency,
     plan_id: props.plan.id
   });
@@ -132,11 +132,14 @@ const handlePayment = () => {
       axios
         .post(PROCESS_PAYMENT_API, {
           nonce: payload.nonce,
+          device_id: 2,
+          plan_id: props.plan.id
         })
         .then((response) => {
-          PAYMENT_INTENT_ID.value = response.data;
+          
+          PAYMENT_ID.value = response.data.transaction_id;
           axios.post(PAYMENT_SUCCESS_API, {
-            payment_intent_id: PAYMENT_INTENT_ID.value,
+            payment_id: PAYMENT_ID.value,
           });
           paymentCompleted.value = true;
           message.value = "Payment Successful!";
@@ -145,7 +148,7 @@ const handlePayment = () => {
           message.value = "Payment failed. Please try again.";
           console.error("Payment error:", error);
           axios.post(PAYMENT_FAILURE_API, {
-            payment_intent_id: PAYMENT_INTENT_ID.value,
+            payment_id: PAYMENT_ID.value,
           });
         })
         .finally(() => {

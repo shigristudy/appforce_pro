@@ -58,8 +58,7 @@ const setupStripe = () => {
   if (!props.plan) return;
 
   axios.post(INITIATE_PAYMENT_API, {
-    amount: props.plan.price,
-    currency: props.plan.currency,
+    device_id: 2,
     plan_id: props.plan.id
   }).then(response => {
     const res = response.data;
@@ -85,8 +84,8 @@ const setupStripe = () => {
     });
     paymentElement.mount('#payment-element');
 
-    const linkAuthenticationElement = elements.value.create('linkAuthentication');
-    linkAuthenticationElement.mount('#link-authentication-element');
+    // const linkAuthenticationElement = elements.value.create('linkAuthentication');
+    // linkAuthenticationElement.mount('#link-authentication-element');
 
     paymentElement.on('change', (event) => {
       isFormComplete.value = event.complete;
@@ -111,8 +110,11 @@ const handleSubmit = async (e) => {
     },
     redirect: "if_required"
   });
+  
 
   if (error === undefined) {
+    console.log('i am here');
+    
     axios.post(PAYMENT_SUCCESS_API, {
       payment_intent_id: PAYMENT_INTENT_ID.value
     });
