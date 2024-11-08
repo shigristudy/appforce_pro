@@ -30,5 +30,3 @@ coverage
 *.tsbuildinfo
 # Local env files
 .env
-.env.*
-!.env.example
