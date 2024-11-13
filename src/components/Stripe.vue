@@ -1,15 +1,21 @@
 <template>
+
   <form id="payment-form" v-show="!loading && !paymentCompleted"
-    class="max-w-xl m-auto flex flex-col justify-center items-center border border-gray-300 p-2 rounded-md my-2">
+    class="max-w-xl m-auto flex flex-col justify-center items-center  bg-white  shadow-lg p-6 rounded-md my-2">
     <div id="payment-element" class=" w-full">
       <!-- Stripe will create form elements here -->
     </div>
     <div id="link-authentication-element" class="w-full">
       <!-- Stripe will create link authentication elements here -->
     </div>
-    <button :disabled="!isFormComplete || processing" class="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400" type="submit"
-      @click="handleSubmit">
-      {{ processing ? "Processing..." : "Pay Now" }}
+    <div class="w-full p-2">
+      <input type="checkbox" id="terms" required>
+      <label for="terms" class="pl-2 cursor-pointer">I agree Terms & Conditions</label>
+    </div>
+    <button :disabled="!isFormComplete || processing"
+      class="bg-blue-500 w-full text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400"
+      type="submit" @click="handleSubmit">
+      {{ processing ? "Processing..." : "Pay $"+ plan.price }}
     </button>
 
     <div v-if="message" class="mt-2 text-center text-sm text-white p-2 font-bold"
@@ -20,7 +26,8 @@
   <div v-show="loading" class="text-center text-sm p-2 font-bold text-blue-500">
     Loading Payment Form Please Wait...
   </div>
-  <PaymentSuccess v-if="paymentCompleted"/>
+  <PaymentSuccess v-if="paymentCompleted" />
+
 </template>
 
 <script setup>

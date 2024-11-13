@@ -1,27 +1,21 @@
 <template>
-  <div
-    v-show="!loading && !paymentCompleted"
-    class="max-w-xl m-auto flex flex-col justify-center items-center border border-gray-300 p-2 rounded-md my-2"
-  >
-    <div id="braintree-drop-in-container"></div>
-
-    <button
-      v-show="dropinInstance"
-      :disabled="!isFormComplete || processing"
-      class="bg-blue-500 text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400"
-      type="submit"
-      @click="handlePayment"
-    >
+  <div v-show="!loading && !paymentCompleted"
+    class="max-w-xl m-auto flex flex-col justify-center items-center bg-white shadow-lg p-6 rounded-md my-2">
+    <div id="braintree-drop-in-container" class="!border-none"></div>
+    <div v-show="dropinInstance" class="w-full p-2">
+      <input type="checkbox" id="terms" required>
+      <label for="terms" class="pl-2 cursor-pointer">I agree Terms & Conditions</label>
+    </div>
+    <button v-show="dropinInstance" :disabled="!isFormComplete || processing"
+      class="bg-blue-500 w-full text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400"
+      type="submit" @click="handlePayment">
       {{ processing ? "Processing..." : "Pay Now" }}
     </button>
 
-    <div
-      v-if="message"
-      class="mt-2 text-center text-sm p-2 font-bold"
-      :class="
+
+    <div v-if="message" class="mt-2 text-center text-sm p-2 font-bold" :class="
         message.includes('Successful') ? 'text-green-500' : 'text-red-500'
-      "
-    >
+      ">
       {{ message }}
     </div>
   </div>
