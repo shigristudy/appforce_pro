@@ -7,6 +7,7 @@ import axios from "axios";
 import IconStripe from "./components/icons/Stripe.vue";
 import IconBraintree from "./components/icons/Braintree.vue";
 import IconWarning from "./components/icons/Warning.vue"; // Assuming you have an icon for warnings
+import Loader from "./components/icons/Loader.vue"; // Assuming you have an icon for warnings
 import symbols from "./currency";
 
 const method = ref("");
@@ -24,7 +25,7 @@ const message = ref("");
 const info = ref("");
 const description = ref("");
 const icon = ref(null);
-
+const loaded = ref(false);
 onMounted(async () => {
   // check if device_id is present in the url
   const urlParams = new URLSearchParams(window.location.search);
@@ -55,7 +56,7 @@ onMounted(async () => {
     price: plans.value[0].price,
     currency: plans.value[0].currency,
   };
-
+  loaded.value = true
   const ENABLE_GATEWAYS = await axios.get(ENABLE_GATEWAYS_API);
   enableGateways.value = ENABLE_GATEWAYS.data;
 });
@@ -76,6 +77,7 @@ const checkDevicePurchased = async (device_id) => {
   <div
     class="min-w-[500px] bg-[#f0f2f9] min-h-screen flex flex-col items-center py-10 px-6 space-y-5"
   >
+  <div v-if="loaded">
     <div class="w-full max-w-xl" v-if="!info">
       <div
         class="bg-white rounded-lg shadow-lg border border-gray-200 p-6 max-w-xl mb-6 mx-auto"
@@ -175,6 +177,10 @@ const checkDevicePurchased = async (device_id) => {
     <div v-else>
       <PaymentInfo :info="info" :description="description" :icon="icon" />
     </div>
+  </div>
+  <div v-else class="w-full max-w-xl flex justify-center items-center">
+    <Loader/>
+  </div>
   </div>
 </template>
 
