@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center justify-center">
+  <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-lg border border-gray-200">
     <div
       class="p-8 text-center flex flex-col items-center justify-center gap-2"
     >
@@ -26,9 +26,17 @@
       </svg>
       <h1 class="text-3xl font-bold text-green-500 mb-2">Payment Successful</h1>
       <p class="text-lg text-gray-700 mb-4">
-        Thank you for subscribing to Appforce Pro
+        Thank you for subscribing to Appforce Pro Lifetime License
       </p>
-      <p class="text-lg text-gray-700">You can now enjoy Appforce 2</p>
+      <a target="_blank" :href="invoiceLink" class="text-blue-500 font-semibold cursor-pointer hover:underline">Download invoice →</a>
     </div>
   </div>
 </template>
+
+<script setup>
+const props = defineProps({
+  device_id: String
+});
+const INVOICE_LINK = import.meta.env.VITE_INVOICE_LINK;
+const invoiceLink = `${INVOICE_LINK}?device_id=${props.device_id}`
+</script>
