@@ -1,38 +1,28 @@
 <template>
-  <form
-    id="payment-form"
-    v-show="!loading && !paymentCompleted"
-    class="max-w-xl m-auto flex flex-col justify-center items-center bg-white shadow-lg p-6 rounded-md my-2"
-  >
+  <form id="payment-form" v-show="!loading && !paymentCompleted"
+    class="max-w-xl m-auto flex flex-col justify-center items-center bg-white shadow-lg p-6 rounded-md my-2">
     <div id="payment-element" class="w-full">
       <!-- Stripe will create form elements here -->
     </div>
     <div id="link-authentication-element" class="w-full">
       <!-- Stripe will create link authentication elements here -->
     </div>
-    <div class="w-full p-2">
+    <div class="w-full p-2 flex justify-start items-center">
       <input type="checkbox" id="terms" v-model="termsChecked" required />
-      <label for="terms" class="pl-2 cursor-pointer"
-        >By clicking on the Pay button, you agree to our
-        <a target="_blank" href="https://appforcepro.com/terms-and-conditions/" class="text-blue-500">Terms & Conditions</a></label
-      >
+      <label for="terms" class="pl-1 text-sm cursor-pointer flex justify-center items-center">By clicking on the Pay
+        button, you agree to our
+        <a target="_blank" href="https://appforcepro.com/terms-and-conditions/" class="text-blue-500">Terms &
+          Conditions</a></label>
     </div>
-    <button
-      :disabled="!isFormComplete || processing || !termsChecked"
+    <button :disabled="!isFormComplete || processing || !termsChecked"
       class="bg-blue-500 w-full text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400"
-      type="submit"
-      @click="handleSubmit"
-    >
+      type="submit" @click="handleSubmit">
       {{ processing ? "Processing..." : "Pay " + symbols[plan.currency] + plan.price }}
     </button>
 
-    <div
-      v-if="message"
-      class="mt-2 text-center text-sm text-white p-2 font-bold"
-      :class="
+    <div v-if="message" class="mt-2 text-center text-sm text-white p-2 font-bold" :class="
         message.includes('Successful') ? 'text-green-500' : 'text-red-500'
-      "
-    >
+      ">
       {{ message }}
     </div>
   </form>
@@ -140,7 +130,6 @@ const handleSubmit = async (e) => {
   });
 
   if (error === undefined) {
-    console.log("i am here");
 
     axios.post(PAYMENT_SUCCESS_API, {
       payment_intent_id: PAYMENT_INTENT_ID.value,

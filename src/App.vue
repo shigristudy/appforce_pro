@@ -34,15 +34,17 @@ onMounted(async () => {
     info.value = "Device ID Missing";
     description.value = "Please provide a valid device ID in the URL.";
     icon.value = IconWarning;
+    loaded.value = true
     return;
   }
   // check device already purchased
   const check = await checkDevicePurchased(device_id.value);
-
+  
   if (check) {
     info.value = "Already Subscribed";
     description.value = "You have already purchased AppForce Pro Player License.";
     icon.value = IconWarning;
+    loaded.value = true
     return;
   }
 
@@ -56,6 +58,7 @@ onMounted(async () => {
     price: plans.value[0].price,
     currency: plans.value[0].currency,
   };
+  
   loaded.value = true
   const ENABLE_GATEWAYS = await axios.get(ENABLE_GATEWAYS_API);
   enableGateways.value = ENABLE_GATEWAYS.data;
