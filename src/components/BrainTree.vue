@@ -2,14 +2,16 @@
   <div v-show="!loading && !paymentCompleted"
     class="max-w-xl m-auto flex flex-col justify-center items-center bg-white shadow-lg p-6 rounded-md my-2">
     <div id="braintree-drop-in-container" class="!border-none"></div>
-    <div v-show="dropinInstance" class="w-full p-2">
-      <input type="checkbox" id="terms" required>
-      <label for="terms" class="pl-2 cursor-pointer">I agree Terms & Conditions</label>
+    <div v-show="dropinInstance" class="w-full p-2 flex justify-start items-center">
+      <input type="checkbox" id="terms" v-model="termsChecked" required />
+      <label for="terms" class="pl-1 text-sm cursor-pointer flex justify-center items-center gap-1">By clicking on the Pay button, you agree to our
+        <a target="_blank" href="https://appforcepro.com/terms-and-conditions/" class="text-blue-500"> Terms &
+          Conditions</a></label>
     </div>
-    <button v-show="dropinInstance" :disabled="!isFormComplete || processing"
+    <button v-show="dropinInstance" :disabled="!isFormComplete || processing || !termsChecked"
       class="bg-blue-500 w-full text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400"
       type="submit" @click="handlePayment">
-      {{ processing ? "Processing..." : "Pay Now" }}
+      {{ processing ? "Processing..." : "Pay " + symbols[plan.currency] + plan.price }}
     </button>
 
 
@@ -22,7 +24,7 @@
   <div v-show="loading" class="text-center text-sm p-2 font-bold text-blue-500">
     Loading Payment Form Please Wait...
   </div>
-  <PaymentSuccess v-if="paymentCompleted" />
+  <PaymentSuccess :device_id="device_id" v-if="paymentCompleted" />
 </template>
 
 <script setup>
@@ -30,11 +32,15 @@ import dropin from "braintree-web-drop-in";
 import { ref, onMounted, computed, watch } from "vue";
 import axios from "axios";
 import PaymentSuccess from "./PaymentSuccess.vue";
+import symbols from "./../currency";
+
 
 const props = defineProps({
-  plan: Object
+  plan: Object,
+  device_id: String
 });
 
+const termsChecked = ref(false);
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const INITIATE_PAYMENT_API = `${BASE_URL}/braintree/initiate`;
 const PROCESS_PAYMENT_API = `${BASE_URL}/braintree/process_payment`;
@@ -54,14 +60,17 @@ onMounted(async () => {
 });
 
 watch(() => props.plan, () => {
-  setupBraintree();
+  () => props.plan,
+    () => {
+      setupBraintree();
+    }
 });
 
 const setupBraintree = async () => {
   if (!props.plan) return;
 
   const { data } = await axios.post(INITIATE_PAYMENT_API, {
-    device_id: 2,
+    device_id: props.device_id,
     currency: props.plan.currency,
     plan_id: props.plan.id
   });
