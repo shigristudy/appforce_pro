@@ -14,7 +14,7 @@
       <input type="checkbox" id="terms" v-model="termsChecked" required />
       <label for="terms" class="pl-2 cursor-pointer"
         >By clicking on the Pay button, you agree to our
-        <a target="_blank" href="https://appforcepro.com/terms-and-conditions/" class="text-blue-500">Terms & Conditions</a></label
+        <a target="_blank" href="https://appforcepro.com/terms-conditions/" class="text-blue-500"> Terms & Conditions</a></label
       >
     </div>
     <button
