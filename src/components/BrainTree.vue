@@ -4,8 +4,8 @@
     <div id="braintree-drop-in-container" class="!border-none"></div>
     <div v-show="dropinInstance" class="w-full p-2 flex justify-start items-center">
       <input type="checkbox" id="terms" v-model="termsChecked" required />
-      <label for="terms" class="pl-1 text-sm cursor-pointer flex justify-center items-center">By clicking on the Pay button, you agree to our
-        <a target="_blank" href="https://appforcepro.com/terms-and-conditions/" class="text-blue-500">Terms &
+      <label for="terms" class="pl-1 text-sm cursor-pointer flex justify-center items-center gap-1">By clicking on the Pay button, you agree to our
+        <a target="_blank" href="https://appforcepro.com/terms-and-conditions/" class="text-blue-500"> Terms &
           Conditions</a></label>
     </div>
     <button v-show="dropinInstance" :disabled="!isFormComplete || processing || !termsChecked"

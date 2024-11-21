@@ -39,8 +39,16 @@ onMounted(async () => {
   }
   // check device already purchased
   const check = await checkDevicePurchased(device_id.value);
+
+  if(!check.isvalid) {
+    info.value = "Invalid Device ID";
+    description.value = "Please provide a valid device ID in the URL.";
+    icon.value = IconWarning;
+    loaded.value = true
+    return;
+  }
   
-  if (check) {
+  if (check.purcahsed) {
     info.value = "Already Subscribed";
     description.value = "You have already purchased AppForce Pro Player License.";
     icon.value = IconWarning;
@@ -69,10 +77,7 @@ const checkDevicePurchased = async (device_id) => {
   const { data } = await axios.post(CHECK_PURCHASED_API, {
     device_id,
   });
-  if (data.success) {
-    return true;
-  }
-  return false;
+  return data
 };
 </script>
 
