@@ -33,11 +33,6 @@
             >Privacy</a
           >
           <a
-            href="https://appforcepro.com/support"
-            class="text-gray-400 hover:text-white transition-colors"
-            >Support</a
-          >
-          <a
             href="https://appforcepro.com/contact"
             class="text-gray-400 hover:text-white transition-colors"
             >Contact</a
