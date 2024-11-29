@@ -29,8 +29,8 @@ const description = ref("");
 const icon = ref(null);
 const loaded = ref(false);
 onMounted(async () => {
-  device_id.value = window?.config?.DEVICE_ID ?? null;
-  
+  device_id.value = window?.config?.DEVICE_ID ?? "FC:A4:7A:A9:77:26";
+
   if (!device_id.value) {
     info.value = "Device Mac ID Not Found";
     description.value = "Please provide a valid device Mac ID in the URL.";

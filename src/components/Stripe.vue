@@ -20,7 +20,7 @@
       {{ processing ? "Processing..." : "Pay " + symbols[plan.currency] + plan.price }}
     </button>
 
-    <div v-if="message" class="mt-2 text-center text-sm text-white p-2 font-bold" :class="
+    <div v-if="message" class="mt-2 text-center text-sm p-2 font-bold" :class="
         message.includes('Successful') ? 'text-green-500' : 'text-red-500'
       ">
       {{ message }}
@@ -135,6 +135,9 @@ const handleSubmit = async (e) => {
     axios.post(PAYMENT_SUCCESS_API, {
       payment_intent_id: PAYMENT_INTENT_ID.value,
     });
+
+    paymentCompleted.value = true;
+
   } else {
     axios.post(PAYMENT_FAILURE_API, {
       payment_intent_id: PAYMENT_INTENT_ID.value,
@@ -143,7 +146,6 @@ const handleSubmit = async (e) => {
     });
   }
 
-  paymentCompleted.value = true;
   // Show Message of Payment Success or Failure
   message.value = error ? error.message : "Payment Successful";
   processing.value = false;
