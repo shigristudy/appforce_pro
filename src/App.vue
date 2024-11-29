@@ -29,7 +29,8 @@ const description = ref("");
 const icon = ref(null);
 const loaded = ref(false);
 onMounted(async () => {
-  device_id.value = window.config.DEVICE_ID;
+  device_id.value = window?.config?.DEVICE_ID ?? null;
+  
   if (!device_id.value) {
     info.value = "Device Mac ID Not Found";
     description.value = "Please provide a valid device Mac ID in the URL.";
@@ -167,6 +168,7 @@ const checkDevicePurchased = async (device_id) => {
             <Stripe
               :plan="selectedPlan"
               :device_id="device_id"
+              :public_key="enableGateways.keys.stripe_public_key"
               v-if="
                 method == 'stripe' ||
                 (enableGateways.stripe && !method && !enableGateways.brainTree)

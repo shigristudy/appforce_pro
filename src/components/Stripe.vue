@@ -44,7 +44,8 @@ import PaymentSuccess from "./PaymentSuccess.vue";
 import symbols from "./../currency";
 const props = defineProps({
   plan: Object,
-  device_id: String
+  device_id: String,
+  public_key: String,
 });
 
 
@@ -60,7 +61,7 @@ watch(
 );
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-const STRIPE_PUBLISHABLE_KEY = import.meta.env.VITE_STRIPE_API_KEY;
+const STRIPE_PUBLISHABLE_KEY = props.public_key;
 const INITIATE_PAYMENT_API = `${BASE_URL}/stripe/initiate`;
 const PAYMENT_SUCCESS_API = `${BASE_URL}/stripe/complete`;
 const PAYMENT_FAILURE_API = `${BASE_URL}/stripe/failure`;
