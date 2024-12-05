@@ -21,7 +21,7 @@ const PLANS_API = `${BASE_URL}/plans`;
 const ENABLE_GATEWAYS_API = `${BASE_URL}/enable-gateways`;
 
 const device_id = ref("");
-const invoiceLink = ref("")
+const invoiceLink = ref("");
 const plans = ref([]);
 const message = ref("");
 const info = ref("");
@@ -48,7 +48,7 @@ onMounted(async () => {
     loaded.value = true
     return;
   }
-  
+
   if (check.purcahsed) {
     info.value = "Already Subscribed";
     description.value = "You have already purchased AppForce Pro Player License.";
@@ -67,8 +67,8 @@ onMounted(async () => {
     price: plans.value[0].price,
     currency: plans.value[0].currency,
   };
-  
-  loaded.value = true
+
+  loaded.value = true;
   const ENABLE_GATEWAYS = await axios.get(ENABLE_GATEWAYS_API);
   enableGateways.value = ENABLE_GATEWAYS.data;
 });
@@ -78,35 +78,32 @@ const checkDevicePurchased = async (device_id) => {
   const { data } = await axios.post(CHECK_PURCHASED_API, {
     device_id,
   });
-  return data
+  return data;
 };
 </script>
 
 <template>
   <div class="min-h-screen flex flex-col">
     <AppHeader />
-    <div class="flex-grow bg-[#f0f2f9] flex flex-col items-center py-10 px-6 space-y-5">
+    <div
+      class="flex-grow bg-[#f0f2f9] flex flex-col items-center py-10 px-6 space-y-5"
+    >
       <div v-if="loaded">
         <div class="w-full max-w-xl" v-if="!info">
           <div
             class="bg-white rounded-lg shadow-lg border border-gray-200 p-6 max-w-xl mb-6 mx-auto"
           >
-            <div class="flex justify-between items-start">
+            <div class="flex justify-between items-center">
               <div>
-                <h2 class="text-5xl font-bold mb-3 text-gray-900">
+                <h2 class="text-3xl sm:text-5xl font-bold mb-3 text-gray-900">
                   {{ symbols[selectedPlan.currency] }} {{ selectedPlan.price }}
                 </h2>
-                <p class="text-md text-gray-500">
-                  <span class="font-semibold">Licence:</span>
-                  {{ selectedPlan.name }}
-                </p>
               </div>
               <div class="text-gray-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="7em"
-                  height="7em"
                   viewBox="0 0 24 24"
+                  class="w-20 h-20 sm:w-28 sm:h-28"
                 >
                   <path
                     fill="currentColor"
@@ -119,20 +116,30 @@ const checkDevicePurchased = async (device_id) => {
                 </svg>
               </div>
             </div>
-            <div class="space-y-1 text-gray-700">
-              <!-- <span class="font-semibold">{{ selectedPlan.name }}</span> -->
-              <div class="text-justify">
-                <span class="text-lg font-semibold">Note:</span>
-                <ul class="list-disc list-inside">
-                  <li>AppForce PRO PLAYER is a video media player.</li>
-                  <li>We do not sell playlists, subscriptions, or channels.</li>
-                  <li>We do not include any content.</li>
-                  <li>
-                    We are not responsible for the content accessed through the app.
-                  </li>
-                  <li>All purchases are final and non-refundable.</li>
-                </ul>
-              </div>
+            <p class="text-md text-gray-500 w-full">
+              <span class="font-semibold">Licence:</span>
+              {{ selectedPlan.name }}
+            </p>
+            <div class="space-y-1 text-gray-700 mt-2">
+              <span class="text-lg font-semibold">Note:</span>
+              <ul class="list-disc pl-3">
+                <li class="text-sm sm:text-lg">
+                  AppForce PRO PLAYER is a video media player.
+                </li>
+                <li class="text-sm sm:text-lg">
+                  We do not sell playlists, subscriptions, or channels.
+                </li>
+                <li class="text-sm sm:text-lg">
+                  We do not include any content.
+                </li>
+                <li class="text-sm sm:text-lg">
+                  We are not responsible for the content accessed through the
+                  app.
+                </li>
+                <li class="text-sm sm:text-lg">
+                  All purchases are final and non-refundable.
+                </li>
+              </ul>
             </div>
 
             <div class="mt-4">
@@ -189,7 +196,7 @@ const checkDevicePurchased = async (device_id) => {
         </div>
       </div>
       <div v-else class="w-full max-w-xl flex justify-center items-center">
-        <Loader/>
+        <Loader />
       </div>
     </div>
     <AppFooter />
