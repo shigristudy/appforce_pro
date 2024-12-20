@@ -17,7 +17,7 @@
     <button :disabled="!isFormComplete || processing || !termsChecked"
       class="bg-blue-500 w-full text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-600 self-start disabled:bg-gray-400"
       type="submit" @click="handleSubmit">
-      {{ processing ? "Processing..." : "Pay " + symbols[plan.currency] + plan.price }}
+      {{ processing ? "Processing..." : "Pay " + formatPrice(grandTotal) }}
     </button>
 
     <div v-if="message" class="mt-2 text-center text-sm p-2 font-bold" :class="
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import axios from "axios";
 const token = ref(null);
 const stripe = ref(null);
@@ -46,6 +46,7 @@ const props = defineProps({
   plan: Object,
   device_id: String,
   public_key: String,
+  billingInfo: Object,
 });
 
 
@@ -77,6 +78,7 @@ const setupStripe = () => {
     .post(INITIATE_PAYMENT_API, {
       device_id: props.device_id,
       plan_id: props.plan.id,
+      billings: props.billingInfo
     })
     .then((response) => {
       const res = response.data;
@@ -134,6 +136,7 @@ const handleSubmit = async (e) => {
 
     axios.post(PAYMENT_SUCCESS_API, {
       payment_intent_id: PAYMENT_INTENT_ID.value,
+      bilings: props.billingInfo,
     });
 
     paymentCompleted.value = true;
@@ -143,11 +146,22 @@ const handleSubmit = async (e) => {
       payment_intent_id: PAYMENT_INTENT_ID.value,
       code: error.code,
       description: error.message,
+      bilings: props.billingInfo,
     });
   }
 
   // Show Message of Payment Success or Failure
   message.value = error ? error.message : "Payment Successful";
   processing.value = false;
+};
+
+// Calculate prices
+const subtotal = computed(() => Number(props.plan.price));
+const vatAmount = computed(() => subtotal.value * 0.19);
+const grandTotal = computed(() => subtotal.value + vatAmount.value);
+
+// Format price to 2 decimal places
+const formatPrice = (value) => {
+  return symbols[props.plan.currency] + value.toFixed(2);
 };
 </script>

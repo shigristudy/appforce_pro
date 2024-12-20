@@ -28,7 +28,7 @@
       <p class="text-lg text-gray-700 mb-4">
         Thank you for subscribing to Appforce Pro Lifetime License
       </p>
-      <a target="_blank" :href="invoiceLink" class="text-blue-500 font-semibold cursor-pointer hover:underline">Download invoice →</a>
+      <!-- <a target="_blank" :href="invoiceLink" class="text-blue-500 font-semibold cursor-pointer hover:underline">Download invoice →</a> -->
     </div>
   </div>
 </template>

@@ -6,11 +6,11 @@ import PaymentInfo from "./components/PaymentInfo.vue";
 import axios from "axios";
 import IconStripe from "./components/icons/Stripe.vue";
 import IconBraintree from "./components/icons/Braintree.vue";
-import IconWarning from "./components/icons/Warning.vue"; // Assuming you have an icon for warnings
 import Loader from "./components/icons/Loader.vue"; // Assuming you have an icon for warnings
-import symbols from "./currency";
 import AppHeader from "./components/AppHeader.vue";
 import AppFooter from "./components/AppFooter.vue";
+import Info from "./components/Info.vue";
+import BillingForm from "./components/BillingForm.vue";
 
 const method = ref("");
 const enableGateways = ref("");
@@ -28,34 +28,51 @@ const info = ref("");
 const description = ref("");
 const icon = ref(null);
 const loaded = ref(false);
+const billingInfo = ref(null);
+const isFormValidated = ref(false);
+
+const handleFormValidated = (status) => {
+  isFormValidated.value = status;
+  // Scroll to payment methods when billing is validated
+  if (status) {
+    setTimeout(() => {
+      window.scrollTo({
+        top: window.scrollY + 200,
+        behavior: 'smooth'
+      });
+    }, 100);
+  }
+};
+
 onMounted(async () => {
   device_id.value = window?.config?.DEVICE_ID ?? "FC:A4:7A:A9:77:26";
 
-  if (!device_id.value) {
-    info.value = "Device Mac ID Not Found";
-    description.value = "Please provide a valid device Mac ID in the URL.";
-    icon.value = IconWarning;
-    loaded.value = true
-    return;
-  }
-  // check device already purchased
-  const check = await checkDevicePurchased(device_id.value);
+  // if (!device_id.value) {
+  //   info.value = "Device Mac ID Not Found";
+  //   description.value = "Please provide a valid device Mac ID in the URL.";
+  //   icon.value = IconWarning;
+  //   loaded.value = true;
+  //   return;
+  // }
+  // // check device already purchased
+  // const check = await checkDevicePurchased(device_id.value);
 
-  if(!check.isvalid) {
-    info.value = "Device Mac ID Not Found";
-    description.value = "Please provide a valid device Mac ID in the URL.";
-    icon.value = IconWarning;
-    loaded.value = true
-    return;
-  }
+  // if (!check.isvalid) {
+  //   info.value = "Device Mac ID Not Found";
+  //   description.value = "Please provide a valid device Mac ID in the URL.";
+  //   icon.value = IconWarning;
+  //   loaded.value = true;
+  //   return;
+  // }
 
-  if (check.purcahsed) {
-    info.value = "Already Subscribed";
-    description.value = "You have already purchased AppForce Pro Player License.";
-    icon.value = IconWarning;
-    loaded.value = true
-    return;
-  }
+  // if (check.purcahsed) {
+  //   info.value = "Already Subscribed";
+  //   description.value =
+  //     "You have already purchased AppForce Pro Player License.";
+  //   icon.value = IconWarning;
+  //   loaded.value = true;
+  //   return;
+  // }
 
   invoiceLink.value = `${INVOICE_LINK}?device_id=${device_id.value}`;
 
@@ -90,105 +107,53 @@ const checkDevicePurchased = async (device_id) => {
     >
       <div v-if="loaded">
         <div class="w-full max-w-xl" v-if="!info">
-          <div
-            class="bg-white rounded-lg shadow-lg border border-gray-200 p-6 max-w-xl mb-6 mx-auto"
-          >
-            <div class="flex justify-between items-center">
-              <div>
-                <h2 class="text-3xl sm:text-5xl font-bold mb-3 text-gray-900">
-                  {{ symbols[selectedPlan.currency] }} {{ selectedPlan.price }}
-                </h2>
-              </div>
-              <div class="text-gray-300">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  class="w-20 h-20 sm:w-28 sm:h-28"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M3.5 5A2.5 2.5 0 0 1 6 2.5h10A2.5 2.5 0 0 1 18.5 5v5.5a.5.5 0 0 1-1 0V5A1.5 1.5 0 0 0 16 3.5H6A1.5 1.5 0 0 0 4.5 5v14.382a.5.5 0 0 0 .724.447l1-.5a1.5 1.5 0 0 1 1.57.142l.906.679a.5.5 0 0 0 .6 0l.862-.647a1.5 1.5 0 0 1 1.672-.086l.673.404a.5.5 0 1 1-.514.858l-.674-.404a.5.5 0 0 0-.557.028l-.862.647a1.5 1.5 0 0 1-1.8 0l-.906-.68a.5.5 0 0 0-.523-.046l-1 .5A1.5 1.5 0 0 1 3.5 19.382z"
-                  />
-                  <path
-                    fill="currentColor"
-                    d="M6.5 7a.5.5 0 0 1 .5-.5h6.5a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5m0 3a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5m0 3a.5.5 0 0 1 .5-.5h3.5a.5.5 0 0 1 0 1H7a.5.5 0 0 1-.5-.5m11-1.5a3 3 0 1 0 0 6a3 3 0 0 0 0-6m-4 3a4 4 0 1 1 8 0a4 4 0 0 1-8 0m5.666-1.229a.5.5 0 0 1 0 .708l-2.104 2.103l-1.228-1.228a.5.5 0 0 1 .707-.708l.521.522l1.397-1.397a.5.5 0 0 1 .707 0"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p class="text-md text-gray-500 w-full">
-              <span class="font-semibold">Licence:</span>
-              {{ selectedPlan.name }}
-            </p>
-            <div class="space-y-1 text-gray-700 mt-2">
-              <span class="text-lg font-semibold">Note:</span>
-              <ul class="list-disc pl-3">
-                <li class="text-sm sm:text-lg">
-                  AppForce PRO PLAYER is a video media player.
-                </li>
-                <li class="text-sm sm:text-lg">
-                  We do not sell playlists, subscriptions, or channels.
-                </li>
-                <li class="text-sm sm:text-lg">
-                  We do not include any content.
-                </li>
-                <li class="text-sm sm:text-lg">
-                  We are not responsible for the content accessed through the
-                  app.
-                </li>
-                <li class="text-sm sm:text-lg">
-                  All purchases are final and non-refundable.
-                </li>
-              </ul>
-            </div>
+          <Info :selectedPlan="selectedPlan"/>
+          <BillingForm 
+            v-model:billingInfo="billingInfo"
+            @formValidated="handleFormValidated"
+          />
 
-            <div class="mt-4">
-              <a
-                target="_blank"
-                :href="invoiceLink"
-                class="text-blue-500 font-semibold cursor-pointer hover:underline"
+          <div v-if="isFormValidated" class="space-y-4">
+            <div
+              v-if="enableGateways.stripe && enableGateways.brainTree"
+              class="flex justify-center items-center space-x-5 mb-4"
+            >
+              <button
+                class="flex items-center w-full justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
+                @click="method = 'stripe'"
               >
-                View invoice details →
-              </a>
+                <IconStripe />
+                Stripe
+              </button>
+              <button
+                class="flex items-center w-full justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
+                @click="method = 'braintree'"
+              >
+                <IconBraintree />
+                Braintree
+              </button>
             </div>
-          </div>
-          <div
-            v-if="enableGateways.stripe && enableGateways.brainTree"
-            class="flex justify-center items-center space-x-5 mb-4"
-          >
-            <button
-              class="flex items-center w-full justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
-              @click="method = 'stripe'"
-            >
-              <IconStripe />
-              Stripe
-            </button>
-            <button
-              class="flex items-center w-full justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
-              @click="method = 'braintree'"
-            >
-              <IconBraintree />
-              Braintree
-            </button>
-          </div>
-          <div>
-            <Stripe
-              :plan="selectedPlan"
-              :device_id="device_id"
-              :public_key="enableGateways.keys.stripe_public_key"
-              v-if="
-                method == 'stripe' ||
-                (enableGateways.stripe && !method && !enableGateways.brainTree)
-              "
-            />
-            <BrainTree
-              :plan="selectedPlan"
-              :device_id="device_id"
-              v-if="
-                method == 'braintree' ||
-                (enableGateways.brainTree && !method && !enableGateways.stripe)
-              "
-            />
+            <div>
+              <Stripe
+                :plan="selectedPlan"
+                :billingInfo="billingInfo"
+                :device_id="device_id"
+                :public_key="enableGateways.keys.stripe_public_key"
+                v-if="
+                  method == 'stripe' ||
+                  (enableGateways.stripe && !method && !enableGateways.brainTree)
+                "
+              />
+              <BrainTree
+                :plan="selectedPlan"
+                :billingInfo="billingInfo"
+                :device_id="device_id"
+                v-if="
+                  method == 'braintree' ||
+                  (enableGateways.brainTree && !method && !enableGateways.stripe)
+                "
+              />
+            </div>
           </div>
         </div>
         <div v-else>

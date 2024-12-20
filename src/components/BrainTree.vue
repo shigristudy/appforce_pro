@@ -37,7 +37,8 @@ import symbols from "./../currency";
 
 const props = defineProps({
   plan: Object,
-  device_id: String
+  device_id: String,
+  billingInfo: Object,
 });
 
 const termsChecked = ref(false);
@@ -72,7 +73,8 @@ const setupBraintree = async () => {
   const { data } = await axios.post(INITIATE_PAYMENT_API, {
     device_id: props.device_id,
     currency: props.plan.currency,
-    plan_id: props.plan.id
+    plan_id: props.plan.id,
+    billings: billingInfo
   });
   initializeBraintreeDropin(data.clientToken);
 };
@@ -135,14 +137,16 @@ const handlePayment = () => {
       axios
         .post(PROCESS_PAYMENT_API, {
           nonce: payload.nonce,
-          device_id: 2,
-          plan_id: props.plan.id
+          device_id: props.device_id,
+          plan_id: props.plan.id,
+          billings: props.billingInfo
         })
         .then((response) => {
           
           PAYMENT_ID.value = response.data.transaction_id;
           axios.post(PAYMENT_SUCCESS_API, {
             payment_id: PAYMENT_ID.value,
+            billings: props.billingInfo
           });
           paymentCompleted.value = true;
           message.value = "Payment Successful!";
@@ -152,6 +156,7 @@ const handlePayment = () => {
           console.error("Payment error:", error);
           axios.post(PAYMENT_FAILURE_API, {
             payment_id: PAYMENT_ID.value,
+            billings: props.billingInfo
           });
         })
         .finally(() => {
