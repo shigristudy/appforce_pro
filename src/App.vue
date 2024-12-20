@@ -38,7 +38,7 @@ const handleFormValidated = (status) => {
     setTimeout(() => {
       window.scrollTo({
         top: window.scrollY + 200,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }, 100);
   }
@@ -47,32 +47,36 @@ const handleFormValidated = (status) => {
 onMounted(async () => {
   device_id.value = window?.config?.DEVICE_ID ?? "FC:A4:7A:A9:77:26";
 
-  // if (!device_id.value) {
-  //   info.value = "Device Mac ID Not Found";
-  //   description.value = "Please provide a valid device Mac ID in the URL.";
-  //   icon.value = IconWarning;
-  //   loaded.value = true;
-  //   return;
-  // }
-  // // check device already purchased
-  // const check = await checkDevicePurchased(device_id.value);
+  let isDev = window.location.href.includes("localhost");
 
-  // if (!check.isvalid) {
-  //   info.value = "Device Mac ID Not Found";
-  //   description.value = "Please provide a valid device Mac ID in the URL.";
-  //   icon.value = IconWarning;
-  //   loaded.value = true;
-  //   return;
-  // }
+  if (!isDev) {
+    if (!device_id.value) {
+      info.value = "Device Mac ID Not Found";
+      description.value = "Please provide a valid device Mac ID in the URL.";
+      icon.value = IconWarning;
+      loaded.value = true;
+      return;
+    }
+    // check device already purchased
+    const check = await checkDevicePurchased(device_id.value);
 
-  // if (check.purcahsed) {
-  //   info.value = "Already Subscribed";
-  //   description.value =
-  //     "You have already purchased AppForce Pro Player License.";
-  //   icon.value = IconWarning;
-  //   loaded.value = true;
-  //   return;
-  // }
+    if (!check.isvalid) {
+      info.value = "Device Mac ID Not Found";
+      description.value = "Please provide a valid device Mac ID in the URL.";
+      icon.value = IconWarning;
+      loaded.value = true;
+      return;
+    }
+
+    if (check.purcahsed) {
+      info.value = "Already Subscribed";
+      description.value =
+        "You have already purchased AppForce Pro Player License.";
+      icon.value = IconWarning;
+      loaded.value = true;
+      return;
+    }
+  }
 
   invoiceLink.value = `${INVOICE_LINK}?device_id=${device_id.value}`;
 
@@ -107,8 +111,8 @@ const checkDevicePurchased = async (device_id) => {
     >
       <div v-if="loaded">
         <div class="w-full max-w-xl" v-if="!info">
-          <Info :selectedPlan="selectedPlan"/>
-          <BillingForm 
+          <Info :selectedPlan="selectedPlan" />
+          <BillingForm
             v-model:billingInfo="billingInfo"
             @formValidated="handleFormValidated"
           />
@@ -141,7 +145,9 @@ const checkDevicePurchased = async (device_id) => {
                 :public_key="enableGateways.keys.stripe_public_key"
                 v-if="
                   method == 'stripe' ||
-                  (enableGateways.stripe && !method && !enableGateways.brainTree)
+                  (enableGateways.stripe &&
+                    !method &&
+                    !enableGateways.brainTree)
                 "
               />
               <BrainTree
@@ -150,7 +156,9 @@ const checkDevicePurchased = async (device_id) => {
                 :device_id="device_id"
                 v-if="
                   method == 'braintree' ||
-                  (enableGateways.brainTree && !method && !enableGateways.stripe)
+                  (enableGateways.brainTree &&
+                    !method &&
+                    !enableGateways.stripe)
                 "
               />
             </div>
