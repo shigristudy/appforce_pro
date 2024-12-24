@@ -27,13 +27,8 @@
         Thank you for subscribing to Appforce Pro Lifetime License. Your subscription has been activated successfully.
       </p>
       <p class="text-gray-600 mb-2">Invoice has been sent to your email</p>
-      <p class="text-gray-600 mb-4">You can now return to the application to access all premium features.</p>
-      <button
-        class="flex items-center justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
-        @click="handleClose"
-      >
-        Close and Return to Application
-      </button>
+      <p class="text-gray-600 mb-4">You can now access all premium features of AppForce Pro. If AppForce Pro is already opened. Please exit and open again.</p>
+      <a href="https://appforcepro.com" class="flex items-center justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300">Go to Appforce Pro Website</a>
     </div>
   </div>
 </template>
@@ -42,11 +37,4 @@
 const props = defineProps({
   device_id: String,
 });
-
-const INVOICE_LINK = import.meta.env.VITE_INVOICE_LINK;
-const invoiceLink = `${INVOICE_LINK}?device_id=${props.device_id}`;
-
-const handleClose = () => {
-  window.close();
-};
 </script>

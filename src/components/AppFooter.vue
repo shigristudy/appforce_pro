@@ -41,7 +41,7 @@
 
         <!-- Copyright -->
         <div class="text-gray-400 text-sm text-center">
-          © {{ new Date().getFullYear() }} AppForce Pro. All rights reserved.<br />
+          © {{ new Date().getFullYear() }} DMN Technology GmbH. All rights reserved.<br />
           <span class="text-xs"
             >Secure payments powered by Stripe & Braintree</span
           >
