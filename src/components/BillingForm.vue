@@ -27,7 +27,7 @@
         </div>
         
         <div>
-          <h3 class="text-sm font-medium text-gray-500">Shipping Address</h3>
+          <h3 class="text-sm font-medium text-gray-500">Billing Address</h3>
           <div class="mt-2 space-y-1">
             <p class="text-sm text-gray-900">{{ form.address }}</p>
             <p v-if="form.address2" class="text-sm text-gray-900">{{ form.address2 }}</p>
