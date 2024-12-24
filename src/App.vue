@@ -4,6 +4,7 @@ import Stripe from "./components/Stripe.vue";
 import BrainTree from "./components/BrainTree.vue";
 import PaymentInfo from "./components/PaymentInfo.vue";
 import axios from "axios";
+import IconWarning from "./components/icons/Warning.vue";
 import IconStripe from "./components/icons/Stripe.vue";
 import IconBraintree from "./components/icons/Braintree.vue";
 import Loader from "./components/icons/Loader.vue"; // Assuming you have an icon for warnings
@@ -45,7 +46,7 @@ const handleFormValidated = (status) => {
 };
 
 onMounted(async () => {
-  device_id.value = window?.config?.DEVICE_ID ?? "FC:A4:7A:A9:77:26";
+  device_id.value = window?.config?.DEVICE_ID ?? "FC:A4:7A:A9:77:27";
 
   let isDev = window.location.href.includes("localhost");
 
