@@ -1,8 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center bg-white rounded-md shadow-lg border border-gray-200">
-    <div
-      class="p-8 text-center flex flex-col items-center justify-center gap-2"
-    >
+    <div class="p-8 text-center flex flex-col items-center justify-center gap-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="64px"
@@ -26,20 +24,29 @@
       </svg>
       <h1 class="text-3xl font-bold text-green-500 mb-2">Payment Successful</h1>
       <p class="text-lg text-gray-700 mb-4">
-        Thank you for subscribing to Appforce Pro Lifetime License
+        Thank you for subscribing to Appforce Pro Lifetime License. Your subscription has been activated successfully.
       </p>
-      <p>
-        Invoice has been sent to your email
-      </p>
-      <!-- <a target="_blank" :href="invoiceLink" class="text-blue-500 font-semibold cursor-pointer hover:underline">Download invoice →</a> -->
+      <p class="text-gray-600 mb-2">Invoice has been sent to your email</p>
+      <p class="text-gray-600 mb-4">You can now return to the application to access all premium features.</p>
+      <button
+        class="flex items-center justify-center px-4 py-2 border bg-white rounded-lg cursor-pointer hover:bg-gray-100 transition-colors duration-300"
+        @click="handleClose"
+      >
+        Close and Return to Application
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
 const props = defineProps({
-  device_id: String
+  device_id: String,
 });
+
 const INVOICE_LINK = import.meta.env.VITE_INVOICE_LINK;
-const invoiceLink = `${INVOICE_LINK}?device_id=${props.device_id}`
+const invoiceLink = `${INVOICE_LINK}?device_id=${props.device_id}`;
+
+const handleClose = () => {
+  window.close();
+};
 </script>
